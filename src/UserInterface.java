@@ -55,9 +55,8 @@ public class UserInterface {
 
 
 	private void handleInputMainMenu() {
-		int input01;
+		int input01 = -1;
 		Scanner in = new Scanner(System.in);
-
 		while (!exit01) {
 			System.out.println();
 			printMenuBody();
@@ -69,13 +68,6 @@ public class UserInterface {
 				input01 = -1;
 			}
 			switch (input01) {
-
-//				error case
-				case -1:
-					System.out.println("Invalid Input, please try again");
-//					redundant method call
-					handleInputMainMenu();
-					break;
 
 //				exit case
 				case 0:
@@ -112,22 +104,21 @@ public class UserInterface {
 					int input02 = -1;
 					try {
 						input02 = in.nextInt();
+						System.out.printf("%n");
+						try {
+							displayMyTable(sqlMethods.getSpecificElementFromSpecificTableByElementId("teachers", input02));
+							System.out.println("TEACHES:");
+							displayMyTable(sqlMethods.getClassesFromSpecificTeacher(input02));
+							break;
+							
+						} catch (IdOutOfRangeException e) {
+							System.out.println(e.getMessage());
+							handleInputMainMenu();
+						}
 					} catch (InputMismatchException e) {
 						// input02 stays 01 so get one level up
 					}
-					System.out.printf("%n");
-					try {
-						displayMyTable(sqlMethods.getSpecificElementFromSpecificTableByElementId("teachers", input02));
-					} catch (IdOutOfRangeException e) {
-						System.out.println(e.getMessage());
-						handleInputMainMenu();
-					}
-
-					System.out.println("TEACHES:");
-					displayMyTable(sqlMethods.getClassesFromSpecificTeacher(input02));
 					break;
-
-
 				case 5:
 					writeMyTableToFile(sqlMethods.getAllDataFromSpecificTable("teachers"));
 					break;
@@ -138,7 +129,6 @@ public class UserInterface {
 					System.out.println("Invalid Input, please try again");
 //					redundant method call
 					handleInputMainMenu();
-
 			}
 		}
 	}
